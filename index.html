@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Chroma Key</title>
+    <style>
+        body {
+            background: #000;
+        }
+        iframe,
+        video {
+            filter: url(#greenScreen);
+        }
+    </style>
+</head>
+<body>
+
+<input id="range" type="range" min="0" max="1" step=".05" />
+
+<video src="eddywally.mp4" loop autoplay muted></video>
+
+<video src="doit.mp4" loop autoplay muted></video>
+
+<iframe width="1280" height="720" src="https://www.youtube.com/embed/IaQfYosw0XM" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+<iframe width="1280" height="720" src="https://www.youtube.com/embed/O53jLH_9Clg" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+<svg height="0" width="0">
+    <defs>
+        <filter id="greenScreen" color-interpolation-filters="sRGB">
+            <feColorMatrix in="SourceGraphic" type="matrix"
+                           values="1 0 0 0 0
+                                   0 .5 .5 0 0
+                                   0 0 1 0 0
+                                   1.5 -2 1.5 1 0"/>
+        </filter>
+    </defs>
+</svg>
+
+<script>
+    document.querySelector('#range').addEventListener('change', () => {
+      const range = document.querySelector('#range').value;
+
+      let value = [];
+      value = value.concat([1, 0, 0, 0, 0]);
+      value = value.concat([0, range, 1-range, 0, 0]);
+      value = value.concat([0, 0, 1, 0, 0]);
+      value = value.concat([1.5, -2, 1.5, 1, 0]);
+
+      document.querySelector('feColorMatrix').setAttribute('values', value.join(' '));
+    });
+</script>
+
+<!--
+<svg height=0 width=0 >
+    <defs>
+
+        <filter id='greenScreen' color-interpolation-filters="sRGB">
+
+            <feComponentTransfer result='colorToBlack'>
+
+
+                <feFuncR id='funcR' type='discrete' tableValues='0 1 1  1 1 1'/>
+                <feFuncG id='funcG' type='discrete' tableValues='0 1 '/>
+                <feFuncB id='funcB' type='discrete' tableValues='0 1'/>
+            </feComponentTransfer>
+
+            <feColorMatrix in='colorToBlack' result='blackAndWhite' type='matrix'
+                           values='10 11 10 0 0
+                         10 10 10 0 0
+                         10 10 10 0 0
+                         0 0 0 1 0'/>
+
+
+            <feColorMatrix in='blackAndWhite' result='whiteToTransparent' type='matrix'
+                           values='1 0 0 0 0
+                         0 1 0 0 0
+                         0 0 1 0 0
+                        -1 0 0 1 0'/>
+
+            <feComposite  operator='out' in='SourceGraphic' in='blackAndWhite' />
+
+        </filter>
+
+        <pattern id="p" width="10" height="10"
+                 patternUnits="userSpaceOnUse">
+            <polygon points="5,0 10,10 0,10"/>
+        </pattern>
+    </defs>
+</svg>
+-->
+
+</body>
+</html>
